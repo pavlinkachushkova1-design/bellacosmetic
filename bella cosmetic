@@ -1,0 +1,127 @@
+/**
+ * File: src/pages/Home.tsx
+ * Description: Main single-page layout for Bella Cosmetic. Contains hero, commercial video, products, about and contact sections.
+ */
+
+import React, { useState } from "react";
+import Header from "../components/Header";
+import ProductsGrid from "../components/ProductsGrid";
+import About from "../components/About";
+import Contact from "../components/Contact";
+import Footer from "../components/Footer";
+import VideoSection from "../components/VideoSection";
+
+/**
+ * HomePage component
+ * Manages in-page navigation and assembles all sections into a polished landing page.
+ *
+ * Note: Navigation is internal (no route changes).
+ */
+export default function HomePage(): JSX.Element {
+  const [active, setActive] = useState<"home" | "products" | "about" | "contact">("home");
+
+  /**
+   * Scroll to a named section by id.
+   *
+   * This function:
+   * - updates the active tab state so the header highlights the selection
+   * - finds the corresponding element on the page and scrolls it into view smoothly
+   *
+   * @param section - target section to navigate to
+   */
+  function navigate(section: "home" | "products" | "about" | "contact") {
+    setActive(section);
+
+    // Map section keys to element IDs used on the page
+    const idMap: Record<string, string> = {
+      home: "home-hero",
+      products: "products",
+      about: "about",
+      contact: "contact",
+    };
+
+    const el = document.getElementById(idMap[section]);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      // Fallback: scroll to top of page
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
+  /**
+   * Replace this with your real commercial video URL.
+   * - For YouTube use an embed URL like: https://www.youtube.com/embed/YOUR_ID
+   * - For direct mp4 use the direct file URL.
+   */
+  const VIDEO_URL = "https://www.youtube.com/embed/ScMzIvxBSi4";
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-purple-50 text-pink-900">
+      <Header active={active} onNavigate={navigate} />
+
+      <main className="py-8">
+        {/* Hero */}
+        <section id="home-hero" className="max-w-6xl mx-auto px-6 mt-8">
+          <div className="rounded-3xl overflow-hidden bg-gradient-to-br from-pink-100 via-pink-50 to-purple-50 shadow-lg p-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-extrabold text-pink-700 leading-tight">Bella Cosmetic</h2>
+              <p className="mt-4 text-pink-600 max-w-lg">
+                Soft tones, silky formulas, and curated shades to make you feel beautiful and confident — every day.
+              </p>
+
+              <div className="mt-6 flex items-center gap-4">
+                <button
+                  onClick={() => navigate("products")}
+                  className="px-5 py-3 rounded-lg bg-gradient-to-br from-pink-400 to-purple-300 text-white font-semibold shadow"
+                >
+                  Shop Favorites
+                </button>
+                <button
+                  onClick={() => navigate("about")}
+                  className="px-4 py-3 rounded-lg text-pink-700 bg-white/60 border border-pink-100 hover:shadow"
+                >
+                  Our Story
+                </button>
+              </div>
+
+              <div className="mt-6 text-sm text-pink-400">Free shipping on orders over 2500 ден</div>
+            </div>
+
+            <div className="flex items-center justify-center">
+              <div className="w-64 h-64 rounded-2xl overflow-hidden shadow-xl">
+                <img
+                  src="https://pub-cdn.sider.ai/u/U005H3VOAAA/web-coder/693058133504a6c923273501/resource/8694c573-ff55-4e9b-bf3a-418beede1acb.jpg"
+                  alt="Bella Cosmetic"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Commercial video */}
+        <section id="commercial-video" className="mt-8">
+          <VideoSection videoUrl={VIDEO_URL} />
+        </section>
+
+        {/* Products */}
+        <section id="products" className="mt-10">
+          <ProductsGrid />
+        </section>
+
+        {/* About */}
+        <section id="about" className="mt-6">
+          <About />
+        </section>
+
+        {/* Contact */}
+        <section id="contact" className="mt-6">
+          <Contact />
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
